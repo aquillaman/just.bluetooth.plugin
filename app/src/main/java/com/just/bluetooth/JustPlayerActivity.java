@@ -1,6 +1,5 @@
 package com.just.bluetooth;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -12,11 +11,15 @@ import android.util.Log;
 
 import com.unity3d.player.UnityPlayerActivity;
 
-import java.util.Collection;
 import java.util.Hashtable;
 
 public class JustPlayerActivity extends UnityPlayerActivity {
     private static final String TAG = "Just";
+
+    private JustBluetooth _bluetoothPlugin;
+    public JustBluetooth getBluetoothPlugin(){
+        return _bluetoothPlugin = new JustBluetooth(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
