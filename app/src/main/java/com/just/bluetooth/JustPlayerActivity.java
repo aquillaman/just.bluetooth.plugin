@@ -44,7 +44,7 @@ public class JustPlayerActivity extends UnityPlayerActivity {
                 String deviceHardwareAddress = device.getAddress(); // MAC address
 
                 Log.i(TAG, "Add intent " + action);
-                String key = String.format("%s [%s]", deviceHardwareAddress, deviceName);
+                String key = String.format("%s|%s", deviceHardwareAddress, deviceName);
                 discoveredDevices.put(key, device);
             }
         }
@@ -58,7 +58,7 @@ public class JustPlayerActivity extends UnityPlayerActivity {
         unregisterReceiver(receiver);
     }
 
-    private Hashtable<String, BluetoothDevice> discoveredDevices = new Hashtable<>();
+    private final Hashtable<String, BluetoothDevice> discoveredDevices = new Hashtable<>();
 
     public void requestDiscoverable() {
 //        Manifest.permission.ACCESS_FINE_LOCATION

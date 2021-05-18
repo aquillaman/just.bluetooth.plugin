@@ -73,7 +73,7 @@ public class JustBluetooth {
                     String deviceName = device.getName();
                     String deviceHardwareAddress = device.getAddress(); // MAC address
 
-                    String key = String.format("%s [%s]", deviceHardwareAddress, deviceName);
+                    String key = String.format("%s|%s", deviceHardwareAddress, deviceName);
                     pairedDevices.put(key, device);
                 }
             }
