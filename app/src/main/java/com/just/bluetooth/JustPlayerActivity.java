@@ -14,7 +14,7 @@ import com.unity3d.player.UnityPlayerActivity;
 import java.util.Hashtable;
 
 public class JustPlayerActivity extends UnityPlayerActivity {
-    private static final String TAG = "Just";
+    private static final String TAG = "JustActivity";
 
     private JustBluetooth _bluetoothPlugin;
     public JustBluetooth getBluetoothPlugin(){

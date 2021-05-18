@@ -2,12 +2,19 @@ package com.just.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
+import android.companion.AssociationRequest;
+import android.companion.BluetoothDeviceFilter;
+import android.companion.CompanionDeviceManager;
+import android.content.Context;
+import android.content.IntentSender;
+import android.util.Log;
 
 import java.util.Hashtable;
 import java.util.Set;
 
 public class JustBluetooth {
+
+    private static final String TAG = "JustBluetooth";
 
     private final Hashtable<String, BluetoothDevice> pairedDevices = new Hashtable<>();
     private final JustPlayerActivity _activity;
@@ -81,6 +88,47 @@ public class JustBluetooth {
 
     public String[] getDeviceList() {
         return _activity.getDeviceList();
+    }
+
+
+    private final int SELECT_DEVICE_REQUEST_CODE = 77;
+    public void pairWithDevice(String macAddress) {
+        BluetoothDeviceFilter deviceFilter = new BluetoothDeviceFilter.Builder()
+                // Match only Bluetooth devices whose name matches the pattern.
+//                .setNamePattern(Pattern.compile("My device"))
+                .setAddress(macAddress)
+                // Match only Bluetooth devices whose service UUID matches this pattern.
+//                .addServiceUuid(new ParcelUuid(new UUID(0x123abcL, -1L)), null)
+                .build();
+
+        AssociationRequest pairingRequest = new AssociationRequest.Builder()
+                // Find only devices that match this request filter.
+                .addDeviceFilter(deviceFilter)
+                // Stop scanning as soon as one device matching the filter is found.
+                .setSingleDevice(true)
+                .build();
+
+        CompanionDeviceManager deviceManager = (CompanionDeviceManager) _activity.getSystemService(Context.COMPANION_DEVICE_SERVICE);
+        deviceManager.associate(pairingRequest, new CompanionDeviceManager.Callback() {
+            // Called when a device is found. Launch the IntentSender so the user can
+            // select the device they want to pair with.
+            @Override
+            public void onDeviceFound(IntentSender chooserLauncher) {
+                try {
+                    _activity.startIntentSenderForResult(
+                            chooserLauncher, SELECT_DEVICE_REQUEST_CODE, null, 0, 0, 0
+                    );
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Failed to send intent");
+                }
+            }
+
+            @Override
+            public void onFailure(CharSequence error) {
+                Log.e(TAG, "Failed to send intent");
+                // Handle the failure.
+            }
+        }, null);
     }
 }
 
